@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Mariana Hernandez / COMP 272-002 - Fall 2024
  *
  *   This java file contains the problem solutions for the methods lastBoulder,
  *   showDuplicates, and pair methods. You should utilize the Java Collection
@@ -68,7 +68,30 @@ public class ProblemSolutions {
       //
       // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME / SECTION # ABOVE
       //
-      return -1;
+
+      // Create a max-priority queue to store boulders in descending order.
+      PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+
+      // Add each boulder to the priority queue.
+      for (int boulder : boulders) {
+          pq.add(boulder);
+      }
+
+      // Continue smashing the two heaviest boulders until only one or zero remain.
+      while (pq.size() > 1) {
+
+          // Retrieve and remove the two heaviest boulders.
+          int y = pq.poll(); // heaviest
+          int x = pq.poll(); // second heaviest
+
+          // If they are not equal, insert the difference (y - x) back into the queue.
+          if (x != y) {
+              pq.add(y - x); // The remaining weight of the larger boulder
+          }
+      }
+
+      // If queue is empty, return 0; otherwise, return the last remaining boulder.
+      return pq.isEmpty() ? 0 : pq.peek();
   }
 
 
@@ -94,8 +117,37 @@ public class ProblemSolutions {
         //
         //  YOUR CODE GOES HERE
         //
-        return new ArrayList<>();  // Make sure result is sorted in ascending order
 
+        // Creatoing a HashMap to track the frequency of each string
+        Map<String, Integer> frequencyMap = new HashMap<>();
+
+        // Loop through each string in the input list
+        for (String str : input) {
+
+            // If the string is already in the map, increment its count by 1;
+            // otherwise, set its count to 1
+            frequencyMap.put(str, frequencyMap.getOrDefault(str, 0) + 1);
+        }
+
+        // Create a list to store strings that appear more than once
+        ArrayList<String> duplicates = new ArrayList<>();
+
+        // Check each entry in the frequency map
+        for (Map.Entry<String, Integer> entry : frequencyMap.entrySet()) {
+
+            // If a string's frequency is greater than 1, it means it is a duplicate
+            if (entry.getValue() > 1) {
+
+                // Add the duplicate string to the duplicates list
+                duplicates.add(entry.getKey());
+            }
+        }
+
+        // Step 5: Sort the list of duplicates in ascending order (alphabetically)
+        Collections.sort(duplicates);
+
+        // Step 6: Return the sorted list of duplicates
+        return duplicates;
     }
 
 
@@ -134,6 +186,41 @@ public class ProblemSolutions {
         //
         //  YOUR CODE GOES HERE
         //
-        return new ArrayList<>();  // Make sure returned lists is sorted as indicated above
+
+        // Create a set to track elements we've already seen in the array
+        Set<Integer> seen = new HashSet<>();
+
+        // Use a set to store unique pairs in string format to avoid duplicates
+        Set<String> uniquePairs = new HashSet<>();
+
+        // Looping through each number in the input array
+        for (int num : input) {
+
+            // Calculate the complement of the current number needed to reach sum k
+            int complement = k - num;
+
+            // Checking if we've seen the complement before
+            if (seen.contains(complement)) {
+
+                // If yes, create a sorted pair (smallest number first)
+                int a = Math.min(num, complement);
+                int b = Math.max(num, complement);
+
+                // Add the formatted pair to uniquePairs to ensure no duplicates
+                uniquePairs.add("(" + a + ", " + b + ")");
+            }
+
+            // Step 5: Add the current number to the seen set
+            seen.add(num);
+        }
+
+        // Converting the set of unique pairs to a list so we can sort it
+        ArrayList<String> pairs = new ArrayList<>(uniquePairs);
+
+        // Sort the pairs lexicographically so they are in ascending order
+        Collections.sort(pairs);
+
+        //  Return the sorted list of pairs
+        return pairs;
     }
 }
